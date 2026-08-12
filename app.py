@@ -2,16 +2,16 @@ import streamlit as st
 import joblib
 
 st.set_page_config(
-    page_title="Sentiment Analysis",
+    page_title="StockTwits Sentiment Analysis",
     page_icon="💬",
     layout="centered"
 )
 
 @st.cache_resource
 def load_files():
-    loaded_model = joblib.load("logistic_regression_model.pkl")
-    loaded_tfidf = joblib.load("tfidf_vectorizer.pkl")
-    return loaded_model, loaded_tfidf
+    model = joblib.load("logistic_regression_model.pkl")
+    tfidf = joblib.load("tfidf_vectorizer.pkl")
+    return model, tfidf
 
 try:
     model, tfidf = load_files()
@@ -19,12 +19,12 @@ except Exception as error:
     st.error(f"Could not load the model files: {error}")
     st.stop()
 
-st.title("💬 Sentiment Analysis")
-st.write("Enter text below to predict its sentiment.")
+st.title("💬 StockTwits Sentiment Analysis")
+st.write("Enter a StockTwits message below to predict its sentiment.")
 
 text = st.text_area(
     "Enter your text:",
-    placeholder="Example: I really enjoyed this product!"
+    placeholder="Example: This stock is going to rise strongly today!"
 )
 
 if st.button("Predict Sentiment"):
@@ -36,7 +36,13 @@ if st.button("Predict Sentiment"):
             prediction = model.predict(text_tfidf)[0]
 
             st.subheader("Prediction")
-            st.success(f"Sentiment: {prediction}")
+
+            if prediction == 1:
+                st.success("Sentiment: Bullish 📈")
+            elif prediction == 0:
+                st.error("Sentiment: Bearish 📉")
+            else:
+                st.info(f"Sentiment: {prediction}")
 
         except Exception as error:
             st.error(f"Prediction failed: {error}")
