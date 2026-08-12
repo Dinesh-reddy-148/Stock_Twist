@@ -1,4 +1,4 @@
-# Sentiment Analysis Using Machine Learning
+# Sentiment Analysis using Machine Learning
 
 ## Project Overview
 
